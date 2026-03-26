@@ -2,45 +2,8 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import './CareersPage.css'
 
-function PositionCard({ position, onApply }) {
-  const [open, setOpen] = useState(false)
-  return (
-    <article className={`position-card reveal${open ? ' position-card--open' : ''}`}>
-      <div className="position-card__header" onClick={() => setOpen(o => !o)} role="button" tabIndex={0} onKeyDown={e => e.key === 'Enter' && setOpen(o => !o)}>
-        <div className="position-card__meta">
-          <h3>{position.title}</h3>
-          <div className="position-card__tags">
-            <span className="tag tag--type">{position.type}</span>
-            <span className="tag tag--loc">📍 {position.location}</span>
-          </div>
-        </div>
-        <span className="position-card__toggle" aria-hidden="true">{open ? '−' : '+'}</span>
-      </div>
-
-      {open && (
-        <div className="position-card__body">
-          <p className="position-card__desc">{position.description}</p>
-          {position.requirements?.length > 0 && (
-            <>
-              <h4>Requirements</h4>
-              <ul className="position-card__reqs">
-                {position.requirements.map((r, i) => (
-                  <li key={i}><span className="req-tick" aria-hidden="true">→</span>{r}</li>
-                ))}
-              </ul>
-            </>
-          )}
-          <button className="btn btn-primary position-card__apply" onClick={() => onApply(position.title)}>
-            Apply for This Role
-          </button>
-        </div>
-      )}
-    </article>
-  )
-}
-
-function ApplicationForm({ careers, business, prefilledRole }) {
-  const [form, setForm]     = useState({ name: '', email: '', phone: '', role: prefilledRole || '', coverLetter: '' })
+function ApplicationForm({ careers, business }) {
+  const [form, setForm]     = useState({ name: '', email: '', phone: '', role: '', coverLetter: '' })
   const [file, setFile]     = useState(null)
   const [status, setStatus] = useState('idle')
 
@@ -52,19 +15,16 @@ function ApplicationForm({ careers, business, prefilledRole }) {
 
     const formData = new FormData()
     formData.append('access_key', careers.applicationForm.web3formsKey || '')
-    formData.append('subject', `Job Application: ${form.role || 'General'} — ${business.name}`)
-    formData.append('name',        form.name)
-    formData.append('email',       form.email)
-    formData.append('phone',       form.phone)
-    formData.append('role',        form.role)
-    formData.append('cover_letter', form.coverLetter)
+    formData.append('subject', `Job Application — ${business.name}`)
+    formData.append('name',          form.name)
+    formData.append('email',         form.email)
+    formData.append('phone',         form.phone)
+    formData.append('role_interest', form.role)
+    formData.append('cover_letter',  form.coverLetter)
     if (file) formData.append('resume', file)
 
     try {
-      const res = await fetch('https://api.web3forms.com/submit', {
-        method: 'POST',
-        body: formData,
-      })
+      const res  = await fetch('https://api.web3forms.com/submit', { method: 'POST', body: formData })
       const data = await res.json()
       setStatus(data.success ? 'sent' : 'error')
     } catch {
@@ -77,12 +37,10 @@ function ApplicationForm({ careers, business, prefilledRole }) {
       <div className="careers-success">
         <div className="careers-success__icon">✓</div>
         <h3>Application Received</h3>
-        <p>Thanks for applying. We'll review your application and be in touch if there's a match.</p>
+        <p>Thanks for getting in touch. We'll be in touch if there's a great fit.</p>
       </div>
     )
   }
-
-  const activePositions = (careers.positions || []).filter(p => p.enabled)
 
   return (
     <form className="careers-form" onSubmit={submit} noValidate encType="multipart/form-data">
@@ -102,30 +60,22 @@ function ApplicationForm({ careers, business, prefilledRole }) {
         <input id="cf-cemail" name="email" type="email" required placeholder="you@example.com" value={form.email} onChange={handle} />
       </div>
 
-      {activePositions.length > 0 && (
-        <div className="contact__field">
-          <label htmlFor="cf-crole">Position applying for</label>
-          <select id="cf-crole" name="role" value={form.role} onChange={handle}>
-            <option value="">— Select a role (or leave blank for general enquiry) —</option>
-            {activePositions.map((p, i) => (
-              <option key={i} value={p.title}>{p.title}</option>
-            ))}
-            <option value="General Enquiry">General Enquiry / No specific role</option>
-          </select>
-        </div>
-      )}
+      <div className="contact__field">
+        <label htmlFor="cf-crole">What type of role are you interested in?</label>
+        <input id="cf-crole" name="role" type="text" placeholder="e.g. Carpenter, Labourer, Project Manager…" value={form.role} onChange={handle} />
+      </div>
 
       <div className="contact__field">
-        <label htmlFor="cf-ccl">Cover letter / message <span>*</span></label>
+        <label htmlFor="cf-ccl">Tell us about yourself <span>*</span></label>
         <textarea
           id="cf-ccl" name="coverLetter" rows={5} required
-          placeholder="Tell us a bit about yourself, your experience, and why you'd like to work with us."
+          placeholder="Tell us about your experience, trade qualifications, and why you'd like to work with us."
           value={form.coverLetter} onChange={handle}
         />
       </div>
 
       <div className="contact__field">
-        <label htmlFor="cf-resume">Resume (PDF or Word)</label>
+        <label htmlFor="cf-resume">Resume (PDF or Word — optional)</label>
         <div className="careers-file-input">
           <label htmlFor="cf-resume" className={`careers-file-btn${file ? ' careers-file-btn--has-file' : ''}`}>
             {file ? `✓ ${file.name}` : '📎 Attach Resume'}
@@ -143,7 +93,7 @@ function ApplicationForm({ careers, business, prefilledRole }) {
       )}
 
       <button type="submit" className="btn btn-primary careers-form__submit" disabled={status === 'sending'}>
-        {status === 'sending' ? 'Sending…' : 'Submit Application'}
+        {status === 'sending' ? 'Sending…' : 'Send Application'}
       </button>
     </form>
   )
@@ -153,19 +103,9 @@ export default function CareersPage({ cfg }) {
   const { careers, business } = cfg
   if (!careers?.enabled) return null
 
-  const [applyRole, setApplyRole] = useState('')
   const bgStyle = careers.heroImage
     ? { backgroundImage: `linear-gradient(rgba(0,0,0,.65),rgba(0,0,0,.65)), url(${careers.heroImage})` }
     : {}
-
-  const activePositions = (careers.positions || []).filter(p => p.enabled)
-
-  const handleApply = (role) => {
-    setApplyRole(role)
-    setTimeout(() => {
-      document.getElementById('careers-apply')?.scrollIntoView({ behavior: 'smooth' })
-    }, 50)
-  }
 
   return (
     <div className="careers-page">
@@ -212,24 +152,6 @@ export default function CareersPage({ cfg }) {
         </section>
       )}
 
-      {/* ── Open Positions ── */}
-      {activePositions.length > 0 && (
-        <section className="section cp-positions">
-          <div className="container">
-            <div className="section-header reveal">
-              <div className="title-bar" />
-              <h2>Open Positions</h2>
-              <p>{activePositions.length} role{activePositions.length !== 1 ? 's' : ''} currently available</p>
-            </div>
-            <div className="cp-positions__list">
-              {activePositions.map((p, i) => (
-                <PositionCard key={i} position={p} onApply={handleApply} />
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
       {/* ── Application Form ── */}
       {careers.applicationForm?.enabled && (
         <section id="careers-apply" className="section cp-apply">
@@ -240,7 +162,7 @@ export default function CareersPage({ cfg }) {
               <p>{careers.applicationForm.subheadline}</p>
             </div>
             <div className="cp-apply__form reveal">
-              <ApplicationForm careers={careers} business={business} prefilledRole={applyRole} key={applyRole} />
+              <ApplicationForm careers={careers} business={business} />
             </div>
           </div>
         </section>

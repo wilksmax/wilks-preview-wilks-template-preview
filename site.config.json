@@ -379,53 +379,10 @@
         { "icon": "🏆", "text": "Quality-focused projects you'll be proud of" }
       ]
     },
-    "positions": [
-      {
-        "title": "Licensed Carpenter",
-        "type": "Full-time",
-        "location": "Brisbane, QLD",
-        "description": "We're looking for a qualified carpenter to join our residential and commercial renovation crew. You'll work across a variety of projects and have the chance to progress to a leading hand role.",
-        "requirements": [
-          "Certificate III in Carpentry (or equivalent)",
-          "White Card",
-          "Own tools and reliable transport",
-          "2+ years post-trade experience",
-          "Strong communication and time management"
-        ],
-        "enabled": true
-      },
-      {
-        "title": "Construction Labourer",
-        "type": "Casual / Full-time",
-        "location": "Brisbane, QLD",
-        "description": "We're seeking reliable, hard-working labourers to support our site teams. This is a great entry point into the construction industry with the opportunity to develop trade skills.",
-        "requirements": [
-          "White Card (or willing to obtain)",
-          "Reliable transport",
-          "Strong work ethic and attention to safety",
-          "Available Mon–Fri, 7am start"
-        ],
-        "enabled": true
-      },
-      {
-        "title": "Project Manager",
-        "type": "Full-time",
-        "location": "Brisbane, QLD",
-        "description": "An experienced project manager to oversee residential and light commercial builds from contract award through to handover. This is a senior role with direct client responsibility.",
-        "requirements": [
-          "Builder's licence (QBCC) preferred",
-          "5+ years in a PM or site management role",
-          "Strong programme management and communication skills",
-          "Experience with MS Project or equivalent",
-          "Own vehicle"
-        ],
-        "enabled": true
-      }
-    ],
     "applicationForm": {
       "enabled": true,
-      "headline": "Apply Now",
-      "subheadline": "Can't see a role that fits? Send us your resume anyway — we always keep good people on file.",
+      "headline": "Get in Touch",
+      "subheadline": "We're always open to hearing from skilled, reliable people. Send us your details and we'll keep you in mind.",
       "web3formsKey": ""
     }
   },
