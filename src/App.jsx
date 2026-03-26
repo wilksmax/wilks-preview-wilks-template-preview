@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import cfg from '../site.config.json'
 
 import Nav          from './components/Nav.jsx'
@@ -12,6 +13,11 @@ import Gallery      from './components/Gallery.jsx'
 import Testimonials from './components/Testimonials.jsx'
 import Contact      from './components/Contact.jsx'
 import Footer       from './components/Footer.jsx'
+import ServicePage  from './components/ServicePage.jsx'
+import AboutPage    from './components/AboutPage.jsx'
+import TeamPage     from './components/TeamPage.jsx'
+import CareersPage  from './components/CareersPage.jsx'
+import ProjectsPage from './components/ProjectsPage.jsx'
 
 const SECTION_MAP = {
   hero:         <Hero         key="hero"         cfg={cfg} />,
@@ -25,46 +31,55 @@ const SECTION_MAP = {
   contact:      <Contact      key="contact"      cfg={cfg} />,
 }
 
-export default function App() {
-  const order      = cfg.sections?.order || Object.keys(SECTION_MAP)
+// Scroll-reveal — re-runs on every route change
+function useScrollReveal() {
+  const location  = useLocation()
   const animations = cfg.sections?.animations !== false
 
-  // Scroll-reveal via IntersectionObserver
   useEffect(() => {
     if (!animations) {
       document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => el.classList.add('visible'))
       return
     }
-
+    document.querySelectorAll('.stagger').forEach(container => {
+      Array.from(container.children).forEach((child, i) => child.style.setProperty('--i', i))
+    })
     const io = new IntersectionObserver(
-      entries => {
-        entries.forEach(e => {
-          if (e.isIntersecting) {
-            e.target.classList.add('visible')
-            io.unobserve(e.target)
-          }
-        })
-      },
+      entries => entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('visible'); io.unobserve(e.target) }
+      }),
       { threshold: 0.12 }
     )
-
-    // Assign stagger index to stagger children
-    document.querySelectorAll('.stagger').forEach(container => {
-      Array.from(container.children).forEach((child, i) => {
-        child.style.setProperty('--i', i)
-      })
+    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => {
+      el.classList.remove('visible'); io.observe(el)
     })
-
-    document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el => io.observe(el))
     return () => io.disconnect()
-  }, [animations])
+  }, [location.pathname, animations])
+}
 
-  const sections = order
+// Scroll to hash after navigation (e.g. /#contact)
+function useHashScroll() {
+  const location = useLocation()
+  useEffect(() => {
+    if (location.hash) {
+      setTimeout(() => {
+        const el = document.querySelector(location.hash)
+        if (el) el.scrollIntoView({ behavior: 'smooth' })
+      }, 100)
+    } else {
+      window.scrollTo(0, 0)
+    }
+  }, [location.key])
+}
+
+function AppInner() {
+  useScrollReveal()
+  useHashScroll()
+
+  const order = cfg.sections?.order || Object.keys(SECTION_MAP)
+  const homeSections = order
     .filter(key => {
-      // Skip disabled optional sections
-      if (['gallery', 'testimonials', 'whyUs'].includes(key)) {
-        return cfg[key]?.enabled !== false
-      }
+      if (['gallery', 'testimonials', 'whyUs'].includes(key)) return cfg[key]?.enabled !== false
       return true
     })
     .map(key => SECTION_MAP[key])
@@ -73,8 +88,47 @@ export default function App() {
   return (
     <>
       <Nav cfg={cfg} />
-      <main>{sections}</main>
+      <main>
+        <Routes>
+          {/* Home */}
+          <Route path="/" element={homeSections} />
+
+          {/* Service pages */}
+          <Route path="/services/:slug" element={<ServicePage cfg={cfg} />} />
+
+          {/* About page */}
+          {cfg.aboutPage?.enabled && (
+            <Route path="/about" element={<AboutPage cfg={cfg} />} />
+          )}
+
+          {/* Team page */}
+          {cfg.team?.enabled && (
+            <Route path="/team" element={<TeamPage cfg={cfg} />} />
+          )}
+
+          {/* Careers — page or section mode */}
+          {cfg.careers?.enabled && cfg.careers?.mode !== 'section' && (
+            <Route path="/careers" element={<CareersPage cfg={cfg} />} />
+          )}
+
+          {/* Projects */}
+          {cfg.projects?.enabled && (
+            <Route path="/projects" element={<ProjectsPage cfg={cfg} />} />
+          )}
+
+          {/* Catch-all → home */}
+          <Route path="*" element={homeSections} />
+        </Routes>
+      </main>
       <Footer cfg={cfg} />
     </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppInner />
+    </BrowserRouter>
   )
 }

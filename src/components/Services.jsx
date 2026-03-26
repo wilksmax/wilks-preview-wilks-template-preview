@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import './Services.css'
 
 export default function Services({ cfg }) {
@@ -14,23 +15,36 @@ export default function Services({ cfg }) {
         </div>
 
         <div className="services__grid stagger">
-          {(services.items || []).map((item, i) => (
-            <article key={i} className="card service-card reveal">
-              <div className="service-card__icon">{item.icon}</div>
-              <h3 className="service-card__title">{item.title}</h3>
-              <p className="service-card__desc">{item.description}</p>
-              {item.features?.length > 0 && (
-                <ul className="service-card__features">
-                  {item.features.map((f, j) => (
-                    <li key={j}>
-                      <span className="service-card__tick" aria-hidden="true">→</span>
-                      {f}
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </article>
-          ))}
+          {(services.items || []).map((item, i) => {
+            const hasPage = item.page?.enabled && item.page?.slug
+            const CardEl  = hasPage ? Link : 'article'
+            const cardProps = hasPage
+              ? { to: `/services/${item.page.slug}` }
+              : {}
+
+            return (
+              <CardEl key={i} {...cardProps} className="card service-card reveal">
+                <div className="service-card__icon">{item.icon}</div>
+                <h3 className="service-card__title">{item.title}</h3>
+                <p className="service-card__desc">{item.description}</p>
+                {item.features?.length > 0 && (
+                  <ul className="service-card__features">
+                    {item.features.map((f, j) => (
+                      <li key={j}>
+                        <span className="service-card__tick" aria-hidden="true">→</span>
+                        {f}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                {hasPage && (
+                  <div className="service-card__learn-more">
+                    Learn more <span aria-hidden="true">→</span>
+                  </div>
+                )}
+              </CardEl>
+            )
+          })}
         </div>
       </div>
     </section>

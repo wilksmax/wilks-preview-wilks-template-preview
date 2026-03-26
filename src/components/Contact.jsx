@@ -10,15 +10,19 @@ export default function Contact({ cfg }) {
 
   const submit = async e => {
     e.preventDefault()
-    if (!contact.formspreeId) { setStatus('sent'); return }
     setStatus('sending')
     try {
-      const res = await fetch(`https://formspree.io/f/${contact.formspreeId}`, {
+      const res = await fetch('https://api.web3forms.com/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          access_key: contact.web3formsKey || '',
+          subject:    `New enquiry from ${form.name} — ${business.name}`,
+          ...form,
+        }),
       })
-      setStatus(res.ok ? 'sent' : 'error')
+      const data = await res.json()
+      setStatus(data.success ? 'sent' : 'error')
     } catch {
       setStatus('error')
     }

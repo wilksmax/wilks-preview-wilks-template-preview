@@ -68,3 +68,24 @@
   font-size: .85rem;
   flex-shrink: 0;
 }
+
+.service-card__learn-more {
+  margin-top: 1rem;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  transition: gap .2s;
+}
+a.service-card:hover .service-card__learn-more { gap: .6rem; }
+
+/* Make linked cards look natural (remove default anchor styles) */
+a.service-card {
+  display: flex;
+  text-decoration: none;
+  color: inherit;
+}

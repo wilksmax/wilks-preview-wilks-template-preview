@@ -1,0 +1,93 @@
+.tp-hero {
+  min-height: 40vh;
+  display: flex; align-items: flex-end;
+  padding-block: 8rem 4rem;
+  background:
+    radial-gradient(ellipse 70% 50% at 55% 40%, color-mix(in srgb, var(--color-primary) 10%, transparent), transparent 70%),
+    var(--color-bg);
+}
+.tp-hero__inner { display: flex; flex-direction: column; gap: .9rem; max-width: 680px; }
+.tp-hero__headline {
+  font-size: clamp(2.2rem, 5vw, 3.8rem);
+  text-transform: uppercase; color: var(--color-text); line-height: 1.05;
+}
+.tp-hero__sub { font-size: 1.05rem; color: var(--color-muted); max-width: 480px; line-height: 1.7; }
+
+/* ── Team grid ── */
+.tp-members { background: var(--color-bg); }
+.tp-members__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));
+  gap: var(--gap);
+}
+
+.team-card {
+  display: flex; gap: 1.5rem; align-items: flex-start;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  transition: border-color .25s;
+}
+.team-card:hover { border-color: var(--color-primary); }
+
+.team-card__photo {
+  width: 80px; height: 80px;
+  border-radius: 50%; overflow: hidden;
+  background: var(--color-primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.team-card__photo img { width: 100%; height: 100%; object-fit: cover; }
+.team-card__initials {
+  font-family: var(--font-heading);
+  font-size: 1.6rem; font-weight: 800; color: #fff;
+  letter-spacing: .02em;
+}
+
+.team-card__body { display: flex; flex-direction: column; gap: .5rem; flex: 1; min-width: 0; }
+.team-card__name {
+  font-size: 1.15rem; font-family: var(--font-heading);
+  text-transform: uppercase; color: var(--color-text);
+}
+.team-card__role { font-size: .8rem; color: var(--color-primary); font-weight: 600; text-transform: uppercase; letter-spacing: .06em; }
+.team-card__bio { font-size: .875rem; color: var(--color-muted); line-height: 1.65; }
+
+.team-card__links {
+  display: flex; flex-direction: column; gap: .3rem;
+  margin-top: .25rem;
+  border-top: 1px solid var(--color-border);
+  padding-top: .75rem;
+}
+.team-card__link {
+  display: flex; align-items: center; gap: .45rem;
+  font-size: .8rem; color: var(--color-muted);
+  text-decoration: none;
+  transition: color .2s;
+  overflow: hidden;
+}
+.team-card__link span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.team-card__link:hover { color: var(--color-primary); }
+
+/* ── Careers CTA ── */
+.tp-careers-cta {
+  background: var(--color-surface);
+  border-top: 1px solid var(--color-border);
+  padding-block: clamp(2.5rem, 5vw, 3.5rem);
+}
+.tp-careers-cta__inner {
+  display: flex; justify-content: space-between;
+  align-items: center; gap: 2rem; flex-wrap: wrap;
+}
+.tp-careers-cta__inner h2 {
+  font-size: clamp(1.4rem, 3vw, 2rem);
+  text-transform: uppercase; color: var(--color-text);
+  margin-bottom: .4rem;
+}
+.tp-careers-cta__inner p { color: var(--color-muted); font-size: .95rem; }
+
+@media (max-width: 540px) {
+  .team-card { flex-direction: column; }
+  .tp-careers-cta__inner { flex-direction: column; text-align: center; }
+  .tp-careers-cta__inner .btn { width: 100%; justify-content: center; }
+}

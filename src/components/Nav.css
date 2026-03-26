@@ -49,6 +49,97 @@
 .nav__link:hover { color: var(--color-primary); }
 
 .nav__cta { padding: .55rem 1.25rem; font-size: .9rem; }
+.nav__link--active { color: var(--color-primary) !important; }
+
+/* ─── Services dropdown ─── */
+.nav__dropdown-wrap {
+  position: relative;
+}
+
+.nav__dropdown-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-body);
+  display: flex;
+  align-items: center;
+  gap: .3rem;
+  padding: 0;
+}
+
+.nav__drop-arrow {
+  font-size: .65rem;
+  transition: transform .2s;
+  display: inline-block;
+}
+.nav__dropdown-wrap--open .nav__drop-arrow { transform: rotate(180deg); }
+
+.nav__dropdown {
+  position: absolute;
+  top: calc(100% + .75rem);
+  left: 50%;
+  transform: translateX(-50%);
+  min-width: 220px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  box-shadow: 0 12px 40px rgba(0,0,0,.5);
+  padding: .5rem;
+  display: none;
+  flex-direction: column;
+  z-index: 100;
+}
+.nav__dropdown-wrap--open .nav__dropdown { display: flex; }
+
+.nav__dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  padding: .65rem .85rem;
+  font-size: .875rem;
+  color: var(--color-muted);
+  border-radius: var(--radius);
+  transition: background .15s, color .15s;
+  white-space: nowrap;
+}
+.nav__dropdown-item:hover { background: var(--color-surface-alt); color: var(--color-primary); }
+.nav__dropdown-item--active { color: var(--color-primary); }
+.nav__dropdown-item--all { font-weight: 600; color: var(--color-text); }
+
+.nav__dropdown-icon { font-size: 1rem; }
+
+.nav__dropdown-divider {
+  height: 1px;
+  background: var(--color-border);
+  margin: .25rem 0;
+}
+
+/* Mobile services sub-list — shown inline in mobile drawer */
+.nav__mobile-services {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+  padding: .5rem 0 0 1.25rem;
+  border-left: 2px solid var(--color-primary);
+  margin-top: .25rem;
+}
+
+.nav__mobile-service-all {
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: .1rem;
+}
+
+.nav__mobile-service-link {
+  font-size: .875rem;
+  color: var(--color-muted);
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  transition: color .2s;
+}
+.nav__mobile-service-link:hover { color: var(--color-primary); }
 
 /* ─── Burger ────── */
 .nav__burger {
@@ -92,4 +183,8 @@
 
   .nav__link { font-size: 1.15rem; }
   .nav__cta { width: 100%; justify-content: center; }
+
+  /* Hide the hover dropdown on mobile — use inline list instead */
+  .nav__dropdown { display: none !important; }
+  .nav__drop-arrow { display: none; }
 }
