@@ -1,0 +1,101 @@
+.process { background: var(--color-bg); }
+
+.process__steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  gap: 0;
+  position: relative;
+}
+
+/* Horizontal connecting line between steps */
+.process__steps::before {
+  content: '';
+  position: absolute;
+  top: 2rem;
+  left: calc(2rem + 16px);
+  right: calc(2rem + 16px);
+  height: 2px;
+  background: linear-gradient(to right, var(--color-primary), color-mix(in srgb, var(--color-primary) 30%, transparent));
+  pointer-events: none;
+}
+
+.process__step {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0 1.5rem 0 0;
+  position: relative;
+}
+
+.process__step:last-child { padding-right: 0; }
+
+.process__step-num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 4rem;
+  height: 4rem;
+  border-radius: 50%;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  font-family: var(--font-heading);
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  position: relative;
+  z-index: 1;
+  flex-shrink: 0;
+  transition: background .25s;
+}
+
+.process__step:hover .process__step-num {
+  background: var(--color-primary);
+  color: #fff;
+}
+
+.process__step-body h3 {
+  font-size: 1.2rem;
+  text-transform: uppercase;
+  color: var(--color-text);
+  margin-bottom: .5rem;
+}
+
+.process__step-body p {
+  font-size: .9rem;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+/* Connector line (hidden by default — horizontal line is via ::before) */
+.process__step-connector { display: none; }
+
+@media (max-width: 700px) {
+  .process__steps {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .process__steps::before { display: none; }
+
+  .process__step {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 0 0 2.5rem;
+    border-left: 2px solid var(--color-border);
+    padding-left: 1.5rem;
+    margin-left: 2rem;
+  }
+
+  .process__step:last-child { padding-bottom: 0; border-left: none; }
+
+  .process__step-num {
+    position: absolute;
+    left: -2.1rem;
+    top: 0;
+    width: 3.5rem;
+    height: 3.5rem;
+    font-size: 1rem;
+  }
+
+  .process__step-body { padding-top: .25rem; }
+}

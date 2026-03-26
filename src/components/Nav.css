@@ -1,0 +1,95 @@
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 1000;
+  padding: 1.25rem 0;
+  transition: background .3s, padding .3s, box-shadow .3s;
+}
+
+.nav--scrolled {
+  background: rgba(12, 12, 12, 0.95);
+  backdrop-filter: blur(12px);
+  padding: .75rem 0;
+  box-shadow: 0 2px 24px rgba(0,0,0,.5);
+}
+
+.nav__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+}
+
+.nav__logo {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 1.35rem;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  color: var(--color-text);
+  white-space: nowrap;
+  transition: color .2s;
+}
+.nav__logo:hover { color: var(--color-primary); }
+
+.nav__links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav__link {
+  font-size: .95rem;
+  font-weight: 500;
+  color: var(--color-muted);
+  letter-spacing: .02em;
+  transition: color .2s;
+  white-space: nowrap;
+}
+.nav__link:hover { color: var(--color-primary); }
+
+.nav__cta { padding: .55rem 1.25rem; font-size: .9rem; }
+
+/* ─── Burger ────── */
+.nav__burger {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: .25rem;
+}
+.nav__burger span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: var(--color-text);
+  border-radius: 2px;
+  transition: transform .25s, opacity .25s;
+}
+.nav__burger--open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav__burger--open span:nth-child(2) { opacity: 0; }
+.nav__burger--open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* ─── Mobile ───── */
+@media (max-width: 768px) {
+  .nav__burger { display: flex; }
+
+  .nav__links {
+    position: fixed;
+    inset: 0 0 0 30%;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2rem;
+    background: var(--color-surface);
+    border-left: 1px solid var(--color-border);
+    padding: 2rem;
+    transform: translateX(100%);
+    transition: transform .3s ease;
+  }
+  .nav__links--open { transform: translateX(0); }
+
+  .nav__link { font-size: 1.15rem; }
+  .nav__cta { width: 100%; justify-content: center; }
+}
